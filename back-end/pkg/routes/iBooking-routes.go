@@ -61,17 +61,20 @@ var RegisterBookingRoutes = func(router *gin.Engine) {
 			auth.PUT("/:userID", controllers.UpdateUser)
 			auth.DELETE("/:userID", controllers.DeleteUser)
 			auth.GET("/:userID", controllers.GetUserByID)
+			auth.GET("/", controllers.GetUserByUsername)
+			auth.PUT("/password/:userID", controllers.UpdatePassword)
 		}
 	}
 
 	// booking management
-	//bookingRouter := router.Group("/booking")
-	//{
-	//	bookingRouter.POST("/", controllers.BookSeat)
-	//	bookingRouter.GET("/", controllers.GetBook)
-	//	bookingRouter.PUT("/:bookID", controllers.UpdateBook)    // update or attend
-	//	bookingRouter.DELETE("/:bookID", controllers.DeleteBook) // cancel
-	//}
+	bookingRouter := router.Group("/booking")
+	{
+		bookingRouter.POST("/", controllers.BookSeat)
+		bookingRouter.GET("/getBookingByID/:bookingID", controllers.GetBookingByID)
+		bookingRouter.GET("/:userID", controllers.GetBookingByUserID)
+		bookingRouter.PUT("/:bookingID", controllers.UpdateBooking)    // update or attend
+		bookingRouter.DELETE("/:bookingID", controllers.DeleteBooking) // cancel
+	}
 
 	// notification management
 	//notificationRouter := router.Group("/notification")

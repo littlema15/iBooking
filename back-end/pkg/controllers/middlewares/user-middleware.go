@@ -36,10 +36,10 @@ func GenerateUserAuthMiddleware() (*jwt.GinJWTMiddleware, error) {
 		Authorizator: func(data interface{}, c *gin.Context) bool {
 			// fmt.Println("user")
 			if v, ok := data.(*models.User); ok {
-				if _, _, err := models.GetUserByUsername(v.Username); err == nil {
+				if _, err := models.GetUserByUsername(v.Username); err == nil {
 					return true
 				}
-				if _, _, err := models.GetAdminByUsername(v.Username); err == nil {
+				if _, err := models.GetAdminByUsername(v.Username); err == nil {
 					return true
 				}
 			}
@@ -68,7 +68,7 @@ func userAuthenticator(c *gin.Context) (interface{}, error) {
 	}
 	userName := loginVals.Username
 	password := loginVals.Password
-	user, _, err := models.GetUserByUsername(userName)
+	user, err := models.GetUserByUsername(userName)
 	if err != nil {
 		return "", err
 	}

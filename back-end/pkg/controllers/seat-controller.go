@@ -24,7 +24,7 @@ func CreateSeat(c *gin.Context) {
 		m := v.(map[string]interface{})
 		// check if the room exists
 		roomID := utils.Stoi(m["room_id"].(string), 64).(int64)
-		if _, _, err := models.GetRoomById(roomID); err != nil {
+		if _, err := models.GetRoomById(roomID); err != nil {
 			errorMsg.WriteString(err.Error() + "\n")
 			continue
 		}
@@ -68,14 +68,18 @@ func UpdateSeat(c *gin.Context) {
 
 	for _, v := range json {
 		seatID := utils.Stoi(v["id"].(string), 64).(int64)
-		seat, db, err := models.GetSeatByID(seatID)
+		seat, err := models.GetSeatByID(seatID)
 		if err != nil {
+			errorMsg.WriteString(err.Error() + "\n")
+			continue
+		}
+		if err := models.DeleteSeat(seat.ID); err != nil {
 			errorMsg.WriteString(err.Error() + "\n")
 			continue
 		}
 		if v["room_id"] != nil {
 			roomID := utils.Stoi(v["room_id"].(string), 64).(int64)
-			if _, _, err := models.GetRoomById(roomID); err != nil {
+			if _, err := models.GetRoomById(roomID); err != nil {
 				errorMsg.WriteString(err.Error() + "\n")
 				continue
 			}
@@ -94,7 +98,10 @@ func UpdateSeat(c *gin.Context) {
 			seat.Plug = v["plug"].(bool)
 		}
 
-		db.Save(&seat)
+		if err := seat.Create(); err != nil {
+			errorMsg.WriteString(err.Error() + "\n")
+			continue
+		}
 		Seats = append(Seats, *seat)
 	}
 
@@ -150,7 +157,7 @@ func GetSeatByID(c *gin.Context) {
 		return
 	}
 	seatID := utils.Stoi(c.Param("seatID"), 64).(int64)
-	seat, _, err := models.GetSeatByID(seatID)
+	seat, err := models.GetSeatByID(seatID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),

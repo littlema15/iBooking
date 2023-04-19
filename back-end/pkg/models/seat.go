@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -29,21 +28,16 @@ func GetAllSeats() ([]Seat, error) {
 	return seats, nil
 }
 
-func GetSeatByID(id int64) (*Seat, *gorm.DB, error) {
+func GetSeatByID(id int64) (*Seat, error) {
 	var seat Seat
-	db := db.Model(&Seat{}).Where("ID=?", id).First(&seat)
-	if err := db.Error; err != nil {
-		return nil, nil, err
+	if err := db.Model(&Seat{}).Where("id=?", id).First(&seat).Error; err != nil {
+		return nil, err
 	}
-	return &seat, db, nil
+	return &seat, nil
 }
 
 func DeleteSeat(id int64) error {
-	var seat Seat
-	if err := db.Model(&Seat{}).Where("ID=?", id).Delete(&seat).Error; err != nil {
-		return err
-	}
-	return nil
+	return db.Model(&Seat{}).Where("id=?", id).Delete(&Seat{}).Error
 }
 
 func DeleteSeatByRoomID(id int64) error {

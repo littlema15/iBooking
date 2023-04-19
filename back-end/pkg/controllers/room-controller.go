@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/littlema15/iBooking/pkg/models"
 	"github.com/littlema15/iBooking/pkg/utils"
@@ -37,6 +38,7 @@ func CreateRoom(c *gin.Context) {
 
 func GetRoom(c *gin.Context) {
 	rooms, err := models.GetAllRooms()
+	fmt.Println(c.GetHeader("Authorization"))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -53,7 +55,7 @@ func GetRoomByID(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "empty id"})
 	}
 	roomID := utils.Stoi(c.Param("roomID"), 64).(int64)
-	room, _, err := models.GetRoomById(roomID)
+	room, err := models.GetRoomById(roomID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -107,8 +109,14 @@ func UpdateRoom(c *gin.Context) {
 		})
 	}
 	roomID := utils.Stoi(json["room_id"].(string), 64).(int64)
-	room, db, err := models.GetRoomById(roomID)
+	room, err := models.GetRoomById(roomID)
 	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	if err := models.DeleteRoom(roomID); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -131,7 +139,7 @@ func UpdateRoom(c *gin.Context) {
 	if json["free"] != nil {
 		room.Free = utils.Stoi(json["free"].(string), 16).(int16)
 	}
-	if err := db.Save(&room).Error; err != nil {
+	if err := room.Create(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})

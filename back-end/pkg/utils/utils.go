@@ -2,6 +2,7 @@ package utils
 
 import (
 	"github.com/bwmarrin/snowflake"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 	"strconv"
 )
@@ -33,4 +34,13 @@ func Stoi(s string, n int) interface{} {
 	default:
 		return t
 	}
+}
+
+func Encrypt(s string) (string, error) {
+	// encrypt the password, using password + salt(a string of random numbers) and then hash
+	hash, err := bcrypt.GenerateFromPassword([]byte(s), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), nil
 }

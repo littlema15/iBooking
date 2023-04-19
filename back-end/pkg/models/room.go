@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -29,12 +28,12 @@ func GetAllRooms() ([]Room, error) {
 	return rooms, nil
 }
 
-func GetRoomById(id int64) (*Room, *gorm.DB, error) {
+func GetRoomById(id int64) (*Room, error) {
 	var room Room
 	if err := db.Model(&Room{}).Where("ID=?", id).Preload("Seats").Find(&room).Error; err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return &room, db, nil
+	return &room, nil
 }
 
 func DeleteRoom(id int64) error {

@@ -10,7 +10,7 @@ var db *gorm.DB
 
 type Administrator struct {
 	ID        int64  `gorm:"primaryKey" json:"id"`
-	Username  string `json:"username"`
+	Username  string `gorm:"unique" json:"username"`
 	Password  string `json:"password"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -32,10 +32,10 @@ func (a *Administrator) Create() error {
 	return db.Create(a).Error
 }
 
-func GetAdminByUsername(username string) (*Administrator, *gorm.DB, error) {
+func GetAdminByUsername(username string) (*Administrator, error) {
 	var admin Administrator
 	if err := db.Model(&Administrator{}).Where("username = ?", username).First(&admin).Error; err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return &admin, db, nil
+	return &admin, nil
 }

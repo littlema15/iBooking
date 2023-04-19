@@ -7,7 +7,7 @@ import (
 
 type UserInfo struct {
 	UserID             int64  `gorm:"primaryKey" json:"user_id"`
-	Username           string `gorm:"primaryKey" json:"username"`
+	Username           string `gorm:"unique" json:"username"`
 	Email              string `json:"email"`
 	Gender             string `json:"gender"`
 	NumberDefaults     int32  `json:"number_defaults"`
@@ -16,19 +16,28 @@ type UserInfo struct {
 	UpdatedAt          time.Time
 }
 
-func GetUserinfoByUserID(id int64) (*UserInfo, *gorm.DB, error) {
-	var user UserInfo
-	err := db.Model(&UserInfo{}).Where("userid =?", id).First(&user).Error
-	return &user, db, err
+func (u *UserInfo) Create() error {
+	db.NewRecord(u)
+	return db.Create(u).Error
 }
 
-func GetUserinfoByUsername(username string) (*UserInfo, *gorm.DB, error) {
-	var user UserInfo
-	err := db.Model(&UserInfo{}).Where("username =?", username).First(&user).Error
-	return &user, db, err
+func GetUserinfoByUserID(id int64) (*UserInfo, *gorm.DB, error) {
+	var userinfo UserInfo
+	db := db.Model(&UserInfo{}).Where("user_id =?", id).First(&userinfo)
+	if err := db.Error; err != nil {
+		return nil, nil, err
+	}
+	return &userinfo, db, nil
+}
+
+func GetUserinfoByUsername(username string) (*UserInfo, error) {
+	var userinfo UserInfo
+	if err := db.Model(&UserInfo{}).Where("username =?", username).First(&userinfo).Error; err != nil {
+		return nil, err
+	}
+	return &userinfo, nil
 }
 
 func DeleteUserInfo(id int64) error {
-	var user UserInfo
-	return db.Model(&UserInfo{}).Where("id =?", id).Delete(&user).Error
+	return db.Model(&UserInfo{}).Where("user_id =?", id).Delete(&UserInfo{}).Error
 }

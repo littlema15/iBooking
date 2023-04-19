@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -14,9 +13,9 @@ type User struct {
 }
 
 // Create is used to Sign up
-func (u *User) Create(info UserInfo) error {
+func (u *User) Create() error {
 	db.NewRecord(u)
-	return db.Save(u).Error
+	return db.Create(u).Error
 }
 
 func GetAllUser() ([]User, error) {
@@ -27,22 +26,22 @@ func GetAllUser() ([]User, error) {
 	return users, nil
 }
 
-func GetUserByID(id int64) (*User, *gorm.DB, error) {
+func GetUserByID(id int64) (*User, error) {
 	var user User
-	if err := db.Model(&User{}).Where("ID =?", id).First(&user).Error; err != nil {
-		return nil, nil, err
+	if err := db.Model(&User{}).Where("id =?", id).First(&user).Error; err != nil {
+		return nil, err
 	}
-	return &user, db, nil
+	return &user, nil
 }
 
-func GetUserByUsername(username string) (*User, *gorm.DB, error) {
+func GetUserByUsername(username string) (*User, error) {
 	var user User
-	if err := db.Model(&User{}).Where("username =?", username).First(&user).Error; err != nil {
-		return nil, nil, err
+	if err := db.Model(&User{}).Where("username = ?", username).First(&user).Error; err != nil {
+		return nil, err
 	}
-	return &user, db, nil
+	return &user, nil
 }
 
 func DeleteUser(id int64) error {
-	return db.Model(&User{}).Where("ID = ?", id).Delete(&User{}).Error
+	return db.Model(&User{}).Where("id = ?", id).Delete(&User{}).Error
 }
