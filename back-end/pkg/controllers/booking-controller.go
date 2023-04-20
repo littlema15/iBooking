@@ -130,6 +130,11 @@ func UpdateBooking(c *gin.Context) {
 		}
 		booking.IsSigned = json["is_signed"].(bool)
 	}
+	if err := models.UpdateBooking(bookingID, booking); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "booking updated successfully",
 		"data":    booking,

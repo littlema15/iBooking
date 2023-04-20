@@ -35,3 +35,7 @@ func GetBookingByUserID(id int64) ([]Booking, error) {
 func DeleteBooking(id int64) error {
 	return db.Model(&Booking{}).Where("id = ?", id).Delete(&Booking{}).Error
 }
+
+func UpdateBooking(id int64, booking *Booking) error {
+	return db.Model(&Booking{}).Where("id =?", id).Updates(*booking).Error
+}

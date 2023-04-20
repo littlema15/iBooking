@@ -77,10 +77,10 @@ var RegisterBookingRoutes = func(router *gin.Engine) {
 	}
 
 	// notification management
-	//notificationRouter := router.Group("/notification")
-	//{
-	//	notificationRouter.POST("/", controllers.CreateNotification)
-	//}
+	notificationRouter := router.Group("/notification")
+	{
+		notificationRouter.POST("/", controllers.Notify)
+	}
 
 	// default 404
 	router.NoRoute(func(c *gin.Context) {
