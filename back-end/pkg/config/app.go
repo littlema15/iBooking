@@ -5,12 +5,14 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+const dbIp = "10.177.88.122"
+
 var (
 	db *gorm.DB
 )
 
 const (
-	dsn = "root:123321@tcp(localhost:3306)/iBooking?charset=utf8mb4&parseTime=true&loc=Local"
+	dsn = "root:123321@tcp(10.177.88.122:3306)/iBooking?charset=utf8mb4&parseTime=true&loc=Local"
 )
 
 // Connect to the database

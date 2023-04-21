@@ -17,9 +17,28 @@ const (
 	port = 9910
 )
 
+//	@title			iBooking
+//	@version		1.0
+//	@description	iBooking back-end api.
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	API Support
+//	@contact.url	http://www.swagger.io/support
+//	@contact.email	support@swagger.io
+
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+
+//	@host	localhost:9910
+
+// @securityDefinitions.apiKey	ApiKeyAuth
+// @in							header
+// @name						Authorization
 func main() {
 	router := gin.Default()
+
 	routes.RegisterBookingRoutes(router)
+
 	fmt.Printf("Starting listening port:%d\n", port)
 
 	srv := &http.Server{

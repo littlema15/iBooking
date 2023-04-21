@@ -9,6 +9,16 @@ import (
 	"net/http"
 )
 
+//	CreatAdmin godoc
+//
+//	@Summary		create admin
+//	@Description	create admin
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Param			admin	body	models.Administrator	true	"admin 's username and password"
+//
+//	@Router			/admin/ [post]
 func CreateAdmin(c *gin.Context) {
 	json := make(map[string]interface{})
 	if err := c.BindJSON(&json); err != nil {
@@ -53,6 +63,16 @@ func CreateAdmin(c *gin.Context) {
 
 var AdminAuthMiddleware, adminGinJWTMiddleErr = middlewares.GenerateAdminAuthMiddleware()
 
+//	AdminLogin godoc
+//
+//	@Summary		Admin Login
+//	@Description	admin login
+//	@Tags			Admin
+//	@Accept			json
+//	@Produce		json
+//	@Param			admin	body	models.Administrator	true	"Admin login with username and password"
+//
+//	@Router			/admin/login/ [post]
 func AdminLogin(c *gin.Context) {
 	if adminGinJWTMiddleErr != nil {
 		c.JSON(http.StatusBadGateway, gin.H{

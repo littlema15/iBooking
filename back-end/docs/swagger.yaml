@@ -1,0 +1,130 @@
+definitions:
+  models.Administrator:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Room:
+    properties:
+      createdAt:
+        type: string
+      free:
+        type: integer
+      id:
+        type: integer
+      location:
+        type: string
+      room_number:
+        type: string
+      seats:
+        items:
+          $ref: '#/definitions/models.Seat'
+        type: array
+      total:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  models.Seat:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      plug:
+        type: boolean
+      room_id:
+        type: integer
+      status:
+        type: integer
+      updatedAt:
+        type: string
+      x:
+        type: integer
+      "y":
+        type: integer
+    type: object
+host: localhost:9910
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: iBooking
+  version: "1.0"
+paths:
+  /admin/:
+    post:
+      consumes:
+      - application/json
+      description: create admin
+      parameters:
+      - description: admin 's username and password
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/models.Administrator'
+      produces:
+      - application/json
+      responses: {}
+      summary: create admin
+      tags:
+      - Admin
+  /admin/login/:
+    post:
+      consumes:
+      - application/json
+      description: admin login
+      parameters:
+      - description: Admin login with username and password
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/models.Administrator'
+      produces:
+      - application/json
+      responses: {}
+      summary: Admin Login
+      tags:
+      - Admin
+  /room/auth/:
+    post:
+      consumes:
+      - application/json
+      description: create room
+      parameters:
+      - description: Create Room by giving room information
+        in: body
+        name: admin
+        required: true
+        schema:
+          $ref: '#/definitions/models.Room'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: create room
+      tags:
+      - Room
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

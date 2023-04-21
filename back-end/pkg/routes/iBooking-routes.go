@@ -2,11 +2,18 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	docs "github.com/littlema15/iBooking/docs" // main 文件中导入 docs 包
 	"github.com/littlema15/iBooking/pkg/controllers"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 )
 
 var RegisterBookingRoutes = func(router *gin.Engine) {
+	docs.SwaggerInfo.BasePath = ""
+	// swagger
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	// administrator management
 	adminRouter := router.Group("/admin")
 	{

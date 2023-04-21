@@ -8,6 +8,17 @@ import (
 	"net/http"
 )
 
+// CreateRoom godoc
+//
+//	@Summary		create room
+//	@Description	create room
+//	@Tags			Room
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Param			admin	body	models.Room	true	"Create Room by giving room information"
+//
+//	@Router			/room/auth/ [post]
 func CreateRoom(c *gin.Context) {
 	json := make(map[string]interface{})
 	if err := c.BindJSON(&json); err != nil {
